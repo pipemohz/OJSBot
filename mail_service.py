@@ -8,11 +8,11 @@ import os
 
 
 def send_mail():
-    
+
     # Setup the MIME
     message = MIMEMultipart()
-    message['From'] = 'felipe.moreno@metabiblioteca.com'
-    message['To'] = 'pipemoreno9405@gmail.com'
+    message['From'] = os.getenv('email_account')
+    message['To'] = os.getenv('receivers_email_list').split(',')[0]
     message['Subject'] = 'A test mail sent of OJSBot. It has an attachment.'
     # The subject line
     # The body and the attachments for the mail
@@ -21,7 +21,7 @@ def send_mail():
     attach_file_name = 'report.csv'
     with open(attach_file_name, mode='rb') as attach_file:
         part = MIMEApplication(attach_file.read(), Name=basename(attach_file_name)
-                            )
+                               )
 
     # After the file is closed
     part['Content-Disposition'] = 'attachment; filename="%s"' % basename(
@@ -31,6 +31,6 @@ def send_mail():
     with smtplib.SMTP(host='smtp.gmail.com', port=587) as conn:
         conn.starttls()
         conn.login(user=os.getenv('email_account'),
-                password=os.getenv('email_password'))
-        conn.sendmail(from_addr='felipe.moreno@metabiblioteca.com',
-                    to_addrs=['pipemoreno9405@gmail.com', 'angievargas@metabiblioteca.com'], msg=message.as_string())
+                   password=os.getenv('email_password'))
+        conn.sendmail(from_addr=os.getenv('email_account'),
+                      to_addrs=os.getenv('receivers_email_list').split(','), msg=message.as_string())

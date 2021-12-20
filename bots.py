@@ -5,7 +5,6 @@ from requests.exceptions import Timeout
 
 
 BASE_URL = "https://revistas.uexternado.edu.co/index.php/"
-article_route = ""
 headers = {
     "Accept-Language": "en,es-ES;q=0.9,es;q=0.8",
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.71 Safari/537.36"
@@ -38,8 +37,6 @@ class AuditBot():
         components = {name: 'SI' for name, selector in checklist.items(
         ) if soup.select_one(selector=selector) != None}
 
-        # components['botones_metricas'] = {a.text.lower(): a.get(
-        #     'href') for a in soup.select(selector='.btn.btn-default.analytics_btn') if self.valid_URL(a.get('href'))}
         components['metric_buttons'] = {a.text.lower(): a.get(
             'href') for a in soup.select(selector='.btn.btn-default.analytics_btn')}
         return components
@@ -99,8 +96,6 @@ class AuditBot():
     def audit_journals(self) -> None:
         self.create_report()
         for journal_url in self.extract_urls():
-            # blocks = self.inspect_sidebar_blocks(url=journal_url)
-            # nav_bar = self.inspect_journal_home(url=journal_url)
             checklist = self.inspect_journal_home(url=journal_url)
             self.fill_report(checklist=checklist)
 
